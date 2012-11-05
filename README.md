@@ -1,4 +1,4 @@
 texture-engine
 ==============
 
-Dynamically create textures using Javascript and Canvas
+experiments in dynamic creation of textures using Javascript and Canvas
