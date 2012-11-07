@@ -29,7 +29,8 @@
 	TO DO:
 
 	add seeding
-	add rotation to marks
+	
+	add bg colour to canvas
 	add tile and trim to canvasTools ?
 	jslint
 	maybe print on 9x and trim for tiling?
@@ -39,6 +40,10 @@
 	allow line length to be added as an argument
 	
 	document all the options and cool things
+	
+	add curving to line marks
+	
+	make a GUI to chain, reorder and play with values in realtime
 */
 
 (function ($) {
@@ -115,7 +120,7 @@
 								// enable method chaining
 								return this;
 							},
-							compress : function (compression, gain) {
+							compress : function (compression, gain, transfer) {
 								//	expects:
 								//		compression and gain to be positive integers
 								//		compression: 0 ~ 1
@@ -134,12 +139,14 @@
 									i_value,
 									i_compressed,
 									_compression,
-									_gain;
+									_gain,
+									_transfer;
 
 								r_array = [];
 								_compression = compression || 1;
 								_gain = gain || 0;
-
+								_transfer = transfer || 'linear';
+								
 								if ((_compression + _gain) > 1) {
 									console.log('peaking likely');
 								}
@@ -152,7 +159,77 @@
 									for (y = 0; y < height; y += 1) {
 
 										i_value = a[x][y];
-										i_compressed = (i_value * _compression) + _gain;
+										
+										//        0        0.5PI    PI       1.5PI    2PI
+										//        0        90       180      270      360
+										// sin    0        1        0       -1        0
+										// cos    1        0       -1        0        1
+										
+										switch(_transfer) {
+        								    case 's-curve':
+                                                // Math.sin(i_angle_radians)
+                                                
+                                                // map 
+                                                // 0 -> 1
+                                                // 180 -> 360
+                                                // Math.cos((n * 180) + 180)
+                                                
+                                                // map
+                                                // -1 -> 1
+                                                // 0 -> 1
+                                                // (n + 1) / 2
+                                                
+                                                // [0 - 1] * compression [0 - 1]
+                                                // + gain
+                                                                              
+                                                break;
+                                                 
+                                            case 'curve-90':
+                                            
+                                                // map
+                                                // 0 -> 1
+                                                // 0 -> 90
+                                                // Math.sin(n * 90)
+                                                
+                                                // produces
+                                                // 0 -> 1
+                                           
+                                                break;
+                                            
+                                            case 'curve-45':
+                                                
+                                                // map
+                                                // 0 -> 1
+                                                // 45 -> 90
+                                                
+                                                
+                                                // output 
+                                                // 0.7 -> 1
+                                                
+                                                
+                                                // n - 0.7
+                                                // 1 - n
+                                                // 1 - 0.7 : 0.3
+                                                // 1 - 1   : 0
+                                                
+                                                // n - 1
+                                                // 0.7 - 1 : -0.3
+                                                // 1 - 1   : 0
+                                                
+                                                // push to 0 - (1 - 0.7) ?
+                                                // add gain
+                                            
+                                                
+                                                break;
+                                                   
+                                            case 'linear':
+                                            default:
+                                            
+                                                i_compressed = (i_value * _compression) + _gain;
+                                                break;
+                                        }
+
+										
 
 										if (i_compressed > 1) {
 											i_compressed = 1;
@@ -161,7 +238,11 @@
 									}
 									r_array.push(y_array);
 								}
-
+								
+								
+																
+								
+								
 								// delete anything in a, and put contents of r_array into a
 								a.length = 0;
 								// a.unshift(r_array[0], r_array[1]);
@@ -398,7 +479,7 @@
 										x_offset = Math.sin(i_angle_radians) * line_length;
 										y_offset = Math.cos(i_angle_radians) * line_length;
 										
-										console.log(x_offset);
+										//console.log(x_offset);
 										
 										x_start = x - x_offset;
 										y_start = y - y_offset;
@@ -470,7 +551,8 @@
 		*/
 
 		//$('.output').html(noise_array);
-
+		
+		
 		noise_data_url = noise_engine.
 			canvasTools().
 			makeCanvasFromArray({
@@ -484,7 +566,7 @@
 					v : 4
 				},
 				stroke_style : 'rgba(0, 0, 0, 0.1)',
-				line_length : 5
+				line_length : 4
 			}).
 			addMarks({
 				marks : {
