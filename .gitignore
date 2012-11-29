@@ -1,0 +1,14 @@
+# Ignore mac files
+.DS_Store
+[Tt]humbs.db
+
+# Ignore files I want to ignore
+*.ignore
+
+# Drupal ignores
+## Ignore configuration files that may contain sensitive information.
+sites/*/settings*.php
+
+## Ignore paths that contain user-generated content.
+sites/*/files
+sites/*/private
