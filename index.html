@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <title>Texture Engine</title>
 
   <script src="../stub/prototype/js/jquery-1.7.2.js" type="text/javascript"></script>
@@ -12,18 +12,16 @@
 	</script>
   <script src="texture-engine.js" type="text/javascript"></script>
   <script>
-  
+
 
 (function ($) {
 	$(function () { // jquery ready state
         var
 			noise_array,
 			noise_canvas,
-			noise_data_url;	
-	
-	
-	  
-  // you can either run array2DTools().get() and be returned an array
+			noise_data_url;
+
+  		// you can either run array2DTools().get() and be returned an array
 		// or pass an array variable in it: array2DTools(my_array_variable);
 		noise_array = noise_engine.
 			array2DTools().
@@ -61,8 +59,8 @@
 		*/
 
 		//$('.output').html(noise_array);
-		
-		
+
+
 		noise_data_url = noise_engine.
 			canvasTools().
 			makeCanvasFromArray({
@@ -89,18 +87,16 @@
 			getDataUrl();
 
 		$('.output').css('background-image', 'url(' + noise_data_url + ')');
-		
-		// make a class, probably doesn't work in IE < 9
+
+		// make a class and attach a style tag, probably doesn't work in IE < 9
 		var style = document.createElement('style');
 		style.type = 'text/css';
 		style.innerHTML = ".noise { background-image: url(" + noise_data_url + ")}";
 		document.getElementsByTagName('head')[0].appendChild(style);
-		
+
 		// IE
 		// document.styleSheets[0].addRule('.noise', "'" + noise_data_url + "'", -1);
 		// new_rule = document.styleSheets[0].addRule("DIV B", "color:blue", 0);
-
-
 
 	}); // eo:ready
 }(jQuery));
@@ -110,9 +106,21 @@
     html, body {
       padding:0;
       margin:0;
+  	}
+ 	body {
       color: #333;
       font-family: sans-serif;
-    }
+	  background-color: #ddd;
+	}
+	h1 {
+		margin: 0.25em 0 0.25em -0.045em;
+		padding: 0;
+		font-size: 4em;
+		line-height: 1em;
+		font-weight: bold;
+		letter-spacing: -0.05em;
+		color: #fff;
+	}
     a,
     a:link
     a:visited {
@@ -123,39 +131,44 @@
       color: #c00;
       text-decoration: none;
     }
-    
+
   	.wrapper {
-  		width: 980px;
-	  	margin: 0 auto 0 auto;
-	  	padding: 10px;
-	  	background-color: #fff;
-  	}
+		/* width: 980px; */
+		margin: 0 auto;
+		max-width: 800px;
+	}
     .output {
         width: 100%;
         height: 400px;
         background-color: #ec0;
         background-color: #fff;
-        
+
         background-repeat: no-repeat;
-        /*
-        * use GPU
+    }
+    .noise {
+        background-color: #adf;
+    }
+    .gpu {
+		/* use GPU */
         -webkit-transform : translateZ(0);
         -o-transform :      translateZ(0);
         -moz-transform :    translateZ(0);
         transform :         translateZ(0);
-        */
-    }
-    .noise {
-        background-color: #181;
     }
   </style>
 </head>
-<body class="noise">
-	<div class="wrapper">
-		<h1>Texture Engine</h1>
-		<p>experiments in dynamic creation of textures using Javascript and Canvas</p>
-		<p><a href="http://www.paulhhowells.net">paulhhowells.net</a></p>
-		<div class="output"></div>
+<body>
+	<div class="band">
+		<div class="wrapper">
+			<h1>Texture Engine</h1>
+			<p>experiments in dynamic creation of textures using Javascript and Canvas</p>
+			<p><a href="http://www.paulhhowells.net">paulhhowells.net</a></p>
+		</div>
+	</div>
+	<div class="band noise">
+		<div class="wrapper">
+			<div class="output gpu"></div>
+		</div>
 	</div>
 </body>
 </html>
